@@ -21,13 +21,11 @@
 #define DCELink_h
 
 #include <stdexcept>
-
-#include "SmartPtr.h"
 #include "DCEResource.h"
 
 
 namespace dce {
-
+	
 
 /// Basic DAqCorE communicaton-link class
 
@@ -46,8 +44,6 @@ public:
 	// virtual void close() = 0;
 };
 
-
-typedef SmartPtr<DCELink> DCELinkPtr;
 
 
 /// Message send/receive link

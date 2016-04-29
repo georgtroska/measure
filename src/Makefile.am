@@ -6,13 +6,11 @@ MAINTAINERCLEANFILES = Makefile.in
 lib_LTLIBRARIES = libmeasure.la
 
 libmeasure_la_SOURCES = \
-	SmartPtr.cxx  \
 	DCELink.cxx \
 	RS232Link.cxx \
 	DCEResource.cxx
 
 libmeasure_la_headers = \
-	SmartPtr.h \
 	DCEResource.h \
 	DCELink.h \
 	RS232Link.h

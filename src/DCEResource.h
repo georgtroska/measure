@@ -22,8 +22,6 @@
 
 #include <stdexcept>
 
-#include "SmartPtr.h"
-
 
 namespace dce {
 
