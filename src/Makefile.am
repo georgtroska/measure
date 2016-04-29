@@ -6,20 +6,27 @@ MAINTAINERCLEANFILES = Makefile.in
 lib_LTLIBRARIES = libmeasure.la
 
 libmeasure_la_SOURCES = \
-	HelloWorld.cxx
+	SmartPtr.cxx  \
+	DCELink.cxx \
+	RS232Link.cxx \
+	DCEResource.cxx
 
 libmeasure_la_headers = \
-	HelloWorld.h
+	SmartPtr.h \
+	DCEResource.h \
+	DCELink.h \
+	RS232Link.h
 
 pkginclude_HEADERS = $(libmeasure_la_headers)
 
-bin_PROGRAMS = measure
+bin_PROGRAMS = 
 
-noinst_PROGRAMS =
+noinst_PROGRAMS = \
+	RS232LinkTest
 
-measure_SOURCES = measure.cxx
-measure_LDADD = libmeasure.la
-# measure_LDFLAGS = -static
+RS232LinkTest_SOURCES = RS232LinkTest.cxx
+RS232LinkTest_LDADD = libmeasure.la
+# RS232LinkTest_LDFLAGS = -static
 
 
 rootmapdir = $(libdir)
