@@ -37,6 +37,7 @@ void DCELink::checkIfNotOpen() const throw(std::runtime_error) {
 
 	
 void MessageLink::sendMsg(const std::string msg, int timeout) throw(std::runtime_error) {
+	cout << "SENDING: " << msg << endl;
 	send(msg.c_str(), msg.length(), timeout);
 }
 

@@ -29,12 +29,12 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
-#include <stdint.h>
 
 #include "DCELink.h"
 
 namespace dce {
-class RS232Link : public MessageLink {
+
+class RS232Link : public MessageLink{
 public:
 	
 protected:
@@ -43,15 +43,24 @@ protected:
 	
 	int m_timeout; //in milliseconds;
 	
+	std::string _terminationStringSend;
+	std::string _terminationStringRecv;
+	int _delayAfterSend;
+	
 	
 	
 public:
+
 	std::string getCanonicalURI();
 	std::string getURI();
 	std::string getIdentity();
 	std::string getDescription();
 	
 	bool isOpen() const;
+	
+	void setTerminationStringSend(const std::string str) { _terminationStringSend = str; }
+	void setTerminationStringRecv(const std::string str) { _terminationStringRecv = str; }
+	void setDelayAfterSend(const int delay) { _delayAfterSend = delay; } //in microseconds
 
 	virtual void send(const void *buffer, size_t size, int timeout=-1) throw(std::runtime_error);
 	virtual size_t recv(void *buffer, size_t size, int timeout=-1) throw(std::runtime_error);
@@ -69,7 +78,9 @@ public:
 	
 };
 
-} // namespace dce
+}
+
+
 
 #ifdef __CINT__
 #pragma link C++ class dce::RS232Link-;

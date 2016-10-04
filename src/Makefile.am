@@ -5,15 +5,30 @@ MAINTAINERCLEANFILES = Makefile.in
 
 lib_LTLIBRARIES = libmeasure.la
 
+#OPTS = -DUSEDAQCORE
+
 libmeasure_la_SOURCES = \
-	DCELink.cxx \
-	RS232Link.cxx \
-	DCEResource.cxx
+	DCELink.cpp \
+	RS232Link.cpp \
+	DCEResource.cpp\
+	Channel.cpp \
+	Param.cpp \
+	Limit.cpp \
+	Signal.cpp \
+	Device.cpp \
+	K2000.cpp
 
 libmeasure_la_headers = \
 	DCEResource.h \
 	DCELink.h \
-	RS232Link.h
+	RS232Link.h \
+	Channel.h \
+	Param.h \
+	Limit.h \
+	Signal.h \
+	Device.h \
+	K2000.h \
+	ExcLimit.h
 
 pkginclude_HEADERS = $(libmeasure_la_headers)
 
