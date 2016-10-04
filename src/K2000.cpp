@@ -108,5 +108,11 @@ double K2000::getHumidity(int channel){
 
 std::string K2000::getIDN() {
 	_link.sendMsg("*IDN?\n");
-	return _link.recvMsg(5000);
+	return _link.recvMsg(1000);
+}
+
+double K2000::getVoltageAC() {
+	_link.sendMsg("MEAS:VOLT:AC?\n");
+	cout << _link.recvMsg(1000);
+	return 0;
 }

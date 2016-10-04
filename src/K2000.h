@@ -71,6 +71,8 @@ public:
 	double getHumidity(int channel);
 	
 	std::string getIDN();
+	
+	double getVoltageAC();
 };
 
 #ifdef __CINT__
