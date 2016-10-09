@@ -172,7 +172,7 @@ void K2000::setMode(const K2000::Mode mode) {
 		cerr << "Not possible to set correct mode!" << endl;
 		return;
 	}
-	_link.sendMsg("INIT:CONT 1\n"); //Enable continous measuring, no dedicated triggering
+	query("INIT:CONT 1\n",100); //Enable continous measuring, no dedicated triggering
 	
 }
 
@@ -203,5 +203,18 @@ K2000::Mode K2000::checkMode() {
 	} else {
 		return kUnknown;
 	}
+}
+
+double_t K2000::readInput() {
+	if (_mode == kUnknown) {
+		cerr << "Unknown Mode! Select a mode before initiating a readInput()" << endl;
+		return 0;
+	}
+	return atof(query("FETC?\n",1000).c_str());
+}
+
+// class Input
+double K2000::Input::operator()() {
+	return _dev.readInput();
 }
 

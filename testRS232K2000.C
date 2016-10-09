@@ -14,6 +14,10 @@ int testRS232K2000() {
 	//cout << k.query("CONF?\n",1000) << endl;
 	k.setMode(K2000::kVoltageAC);
 	//cout << k.query("MEAS:VOLT:AC?\n",1000) << endl;
+	//cout << k.query("FETC?\n",10000) << endl;
+	//cout << k.query("FETC?\n",10000) << endl;
+	cout << k.query("FETC?\n",10000) << endl;
+	cout << k.input() << endl;
 	
 
 return 0;
