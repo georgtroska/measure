@@ -151,7 +151,7 @@ dce::RS232Link::RS232Link()
 	: m_device(-1)
 {}
 dce::RS232Link::RS232Link(const std::string &device, uint32_t baudrate, int timeout) throw(std::invalid_argument, std::runtime_error) 
-	: m_device(-1), _terminationStringSend("\n"), _terminationStringRecv("\r\n"), _delayAfterSend(-1) {
+	: m_device(-1), _terminationStringSend("\n"), _terminationStringRecv("\n"), _delayAfterSend(-1) {
 	open(device,baudrate,timeout);
 	
 }
@@ -224,6 +224,11 @@ std::string dce::RS232Link::recvLine(int timeout) throw(std::runtime_error) {
 	iFlags = TIOCM_DTR;
 	ioctl(m_device, TIOCMBIS, &iFlags);
 */
+	
+	if (in.length() > 2) {
+		cout << "Received: " << in << endl;
+		cout << "Last chars are: 0x" << hex << (int)in.at(in.length()-2) << " 0x" << (int)in.at(in.length()-1) << endl;
+	}
 	
 	if (isStrComplete) {
 		//in.erase(in.length()-2,2);

@@ -16,6 +16,22 @@
 
 class K2000: public Device {
 public:
+	enum Mode {
+		kCurrentDC,
+		kCurrentAC,
+		kVoltageAC,
+		kVoltageDC,
+		kResistance2,
+		kResistance4,
+		kPeriod,
+		kFrequency,
+		kTemperature,
+		kDiode,
+		kContinuity,
+		kUnknown
+	} _mode;
+	
+	
 #ifdef USEDAQCORE	
 	//Constructors
 	/** Constructor for K2000 with VXI11Link
@@ -40,6 +56,7 @@ public:
 	K2000(std::string port, int baudrate, int timeout = -1) :
 		Device(port, baudrate, timeout, std::string("K2000")){
 			reset();
+			//_link.setTerminationString("\r");
 	}
 	//Constructors end
 
@@ -58,6 +75,7 @@ public:
 	*/
 	bool isEnabled ();
 
+	/*
 	double getResistance(int channel);
 
 	double getResistance_4Wire(int channel);
@@ -69,10 +87,18 @@ public:
 	double getVoltage(int channel);
 
 	double getHumidity(int channel);
+	* */
+	
+	std::string query(const std::string query, const int timeout);
 	
 	std::string getIDN();
 	
-	double getVoltageAC();
+	//double getVoltageAC();
+	
+	void setMode( const Mode mode);
+	Mode checkMode ();
+	
+	
 };
 
 #ifdef __CINT__

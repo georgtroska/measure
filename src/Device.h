@@ -161,6 +161,12 @@ protected:
 				rs232->send(buffer, size, timeout);
 			}
 		};
+		
+		void setTerminationString(const std::string term) {
+			if (connectionType==RS232) {
+				rs232->setTerminationStringRecv(term);
+			}
+		};
 	} _link;
 	
 	//! All signals are collected in this class

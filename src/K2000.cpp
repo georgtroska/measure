@@ -12,6 +12,7 @@ void K2000::reset() {
 bool K2000::isEnabled () {
 	return true;
 }
+/*
 
 double K2000::getResistance(int channel){
 	std::string in;
@@ -105,14 +106,102 @@ double K2000::getHumidity(int channel){
 
 	return ((-voltage-b)/a)/(1.0546-0.00216*temperature);
 }
-
+*/	
 std::string K2000::getIDN() {
 	_link.sendMsg("*IDN?\n");
+	usleep(100000);
 	return _link.recvMsg(1000);
 }
-
+/*
 double K2000::getVoltageAC() {
-	_link.sendMsg("MEAS:VOLT:AC?\n");
+	_link.sendMsg("FETC?\n");
+	//_link.sendMsg("MEAS:VOLT:AC?\n");
 	cout << _link.recvMsg(1000);
 	return 0;
 }
+*/
+std::string K2000::query(const std::string query, const int timeout) {
+	_link.sendMsg(query);
+	return _link.recvMsg(timeout);
+}
+
+void K2000::setMode(const K2000::Mode mode) {
+	std::string sendStr = "";
+	if (mode == kUnknown) {
+		cerr << "Impossible to set mode to kUnknown" << endl;
+		return;
+	}
+	switch (mode) {
+		case kCurrentAC:
+			sendStr = "CONF:CURR:AC\n";
+			break;
+		case kCurrentDC:
+			sendStr = "CONF:CURR\n";
+			break;
+		case kVoltageAC:
+			sendStr = "CONF:VOLT:AC\n";
+			break;
+		case kVoltageDC:
+			sendStr = "CONF:VOLT\n";
+			break;
+		case kResistance2:
+			sendStr = "CONF:RES\n";
+			break;
+		case kResistance4:
+			sendStr = "CONF:FRES\n";
+			break;
+		case kPeriod:
+			sendStr = "CONF:PER\n";
+			break;
+		case kFrequency:
+			sendStr = "CONF:FREQ\n";
+			break;
+		case kTemperature:
+			sendStr = "CONF:TEMP\n";
+			break;
+		case kDiode:
+			sendStr = "CONF:DIOD\n";
+			break;
+		case kContinuity:
+			sendStr = "CONF:CONT\n";
+			break;
+	}
+	query(sendStr,1000);
+	_mode = checkMode();
+	if (_mode != mode) {
+		cerr << "Not possible to set correct mode!" << endl;
+		return;
+	}
+	_link.sendMsg("INIT:CONT 1\n"); //Enable continous measuring, no dedicated triggering
+	
+}
+
+K2000::Mode K2000::checkMode() {
+	std::string myMode = query("CONF?\n",1000);
+	if (myMode.find("VOLT:DC") != std::string::npos) {
+		return kVoltageDC;
+	} else if (myMode.find("VOLT:AC") != std::string::npos) {
+		return kVoltageAC;
+	} else  if (myMode.find("CURR:DC") != std::string::npos) {
+		return kCurrentDC;
+	} else if (myMode.find("CURR:AC") != std::string::npos) {
+		return kCurrentAC;
+	} else if (myMode.find("FRES") != std::string::npos) {
+		return kResistance4;
+	} else if (myMode.find("RES") != std::string::npos) {
+		return kResistance2;
+	} else if (myMode.find("PER") != std::string::npos) {
+		return kPeriod;
+	} else if (myMode.find("FREQ") != std::string::npos) {
+		return kFrequency;
+	} else if (myMode.find("TEMP") != std::string::npos) {
+		return kTemperature;
+	} else if (myMode.find("DIOD") != std::string::npos) {
+		return kDiode;
+	} else if (myMode.find("CONT") != std::string::npos) {
+		return kContinuity;
+	} else {
+		return kUnknown;
+	}
+}
+
