@@ -17,7 +17,11 @@ libmeasure_la_SOURCES = \
 	Signal.cpp \
 	Device.cpp \
 	K2000.cpp \
-	HP33120A.cpp
+	HP33120A.cpp \
+	MeasureChannel.cpp \
+	Scan1D.cpp \
+	Window1DGraph.cpp
+	
 
 libmeasure_la_headers = \
 	DCEResource.h \
@@ -30,7 +34,11 @@ libmeasure_la_headers = \
 	Device.h \
 	K2000.h \
 	ExcLimit.h \
-	HP33120A.h
+	HP33120A.h \
+	MeasEvent.h \
+	MeasureChannel.h \
+	Scan1D.h \
+	Window1DGraph.h
 
 pkginclude_HEADERS = $(libmeasure_la_headers)
 
