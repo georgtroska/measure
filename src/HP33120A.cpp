@@ -142,3 +142,27 @@ double HP33120A::getAmplitude() {
 double HP33120A::getOffset() {
 	return atof(query("VOLT:OFFS?\n",1000).c_str());
 }
+
+void HP33120A::Frequency::operator()(double f){
+	_dev.setFrequency(f);
+}
+
+double HP33120A::Frequency::operator()() {
+	return _dev.getFrequency();
+}
+
+void HP33120A::Amplitude::operator()(double a){
+	_dev.setAmplitude(a);
+}
+
+double HP33120A::Amplitude::operator()() {
+	return _dev.getAmplitude();
+}
+
+void HP33120A::Offset::operator()(double u){
+	_dev.setOffset(u);
+}
+
+double HP33120A::Offset::operator()() {
+	return _dev.getOffset();
+}
