@@ -31,6 +31,7 @@ public:
 
 	void addPoint(MeasEvent* event); 	//*RECEIVER*
 	void update();
+	void applyLog();
 	
 	virtual ~Window1DGraph();
 };

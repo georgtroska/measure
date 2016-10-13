@@ -1,5 +1,8 @@
 #include "Scan1D.h"
 
+#include <TMath.h>
+#include <cmath>
+
 using namespace std;
 
 MeasEvent* Scan1D::createBORE() {
@@ -40,6 +43,54 @@ void Scan1D::Run(double start, double stop,  double step, double sleepSet){
 	Run(steps, sleepSet);
 }
 
+ void Scan1D::RunLog(double start, double stop, int nPoints, double sleepSet) {
+	for (int i = 0; i < _graphs.size(); i++){
+		_graphs.at(i)->applyLog();
+	}
+	vector<double> steps;
+	bool isLooping = true;
+	for (int n = 0; n < nPoints; n++){
+		double u = start*exp(n*std::log(stop/start)/(nPoints-1));
+		steps.push_back(u);
+	}
+	Run(steps, sleepSet);
+}
+
+void Scan1D::RunLogDecades(double start, double stop, int stepsPerDecade, double sleepSet) {
+	for (int i = 0; i < _graphs.size(); i++){
+		_graphs.at(i)->applyLog();
+	}
+	
+	int decade = std::floor(abs(log10(start))); //with start = 22, decade -> 1
+	double freq = start/TMath::Power(10,decade); //with start = 22, freq -> 2.2
+	double myFreq;
+	for (int myStep = 0; myStep < stepsPerDecade; myStep++) {
+		myFreq = TMath::Power(TMath::Power(10,1./stepsPerDecade),myStep);
+		if (myFreq > freq) break;
+	}
+	
+	vector<double> steps;
+	//Pushing in the startFreq
+	steps.push_back(TMath::Power(10,decade)*freq);
+	bool isLooping = true;
+	while (isLooping) {
+		for (int myStep = 0; myStep < stepsPerDecade; myStep++) {
+			myFreq = TMath::Power(TMath::Power(10,1./stepsPerDecade),myStep);
+
+			if (TMath::Power(10,decade)*myFreq > stop) {
+				isLooping = false;
+				break;
+			}
+			if (TMath::Power(10,decade)*myFreq >= freq*TMath::Power(10,decade)) steps.push_back(TMath::Power(10,decade)*myFreq);
+		}
+		decade++; 
+	}
+	if (TMath::Power(10,decade)*myFreq > stop) {
+		steps.push_back(stop);
+	}
+	Run(steps, sleepSet);
+}
+
 void Scan1D::Run(vector<double>& steps, double sleepSet) {
 	try{
 		MeasEvent * bore = createBORE();
@@ -47,9 +98,10 @@ void Scan1D::Run(vector<double>& steps, double sleepSet) {
 		delete bore;
 		std::cout << "Scan1D: Starting new measurement..." << std::endl;
 		vector<double>::iterator stepit;
+		bool isFirst = true;
 		for (stepit = steps.begin(); stepit < steps.end(); stepit++){
 			(*_param)(*stepit);
-			sleep(sleepSet);		
+			if (isFirst) sleep(1); else sleep(sleepSet);		
 			MeasEvent * event = new MeasEvent();
 			event->param = *stepit;
 			map<string,MeasureChannel>::iterator it;
@@ -63,6 +115,7 @@ void Scan1D::Run(vector<double>& steps, double sleepSet) {
 			}
 			onData(event);	//sending measurement-data via signal
 			delete event;
+			isFirst = false;
 		}
 		if(_rep) _param->initialize();
 	}

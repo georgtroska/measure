@@ -20,7 +20,8 @@ libmeasure_la_SOURCES = \
 	HP33120A.cpp \
 	MeasureChannel.cpp \
 	Scan1D.cpp \
-	Window1DGraph.cpp
+	Window1DGraph.cpp \
+	ScanSave.cpp
 	
 
 libmeasure_la_headers = \
@@ -38,7 +39,8 @@ libmeasure_la_headers = \
 	MeasEvent.h \
 	MeasureChannel.h \
 	Scan1D.h \
-	Window1DGraph.h
+	Window1DGraph.h \
+	ScanSave.h
 
 pkginclude_HEADERS = $(libmeasure_la_headers)
 

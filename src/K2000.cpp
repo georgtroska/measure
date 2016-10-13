@@ -134,33 +134,63 @@ void K2000::setMode(const K2000::Mode mode) {
 	switch (mode) {
 		case kCurrentAC:
 			sendStr = "CONF:CURR:AC\n";
+			input.setKind("Current");
+			input.setUnit("A");
+			input.setSaveName("I");
 			break;
 		case kCurrentDC:
 			sendStr = "CONF:CURR\n";
+			input.setKind("Current");
+			input.setUnit("A");
+			input.setSaveName("I");
 			break;
 		case kVoltageAC:
 			sendStr = "CONF:VOLT:AC\n";
+			input.setKind("Voltage");
+			input.setUnit("V");
+			input.setSaveName("U");
 			break;
 		case kVoltageDC:
 			sendStr = "CONF:VOLT\n";
+			input.setKind("Voltage");
+			input.setUnit("V");
+			input.setSaveName("U");
 			break;
 		case kResistance2:
 			sendStr = "CONF:RES\n";
+			input.setKind("Resistance");
+			input.setUnit("#Omega");
+			input.setSaveName("R");
 			break;
 		case kResistance4:
 			sendStr = "CONF:FRES\n";
+			input.setKind("Resistance");
+			input.setUnit("#Omega");
+			input.setSaveName("R");
 			break;
 		case kPeriod:
 			sendStr = "CONF:PER\n";
+			input.setKind("Period");
+			input.setUnit("s");
+			input.setSaveName("t");
 			break;
 		case kFrequency:
 			sendStr = "CONF:FREQ\n";
+			input.setKind("Frequency");
+			input.setUnit("Hz");
+			input.setSaveName("f");
 			break;
 		case kTemperature:
 			sendStr = "CONF:TEMP\n";
+			input.setKind("Temperature");
+			input.setUnit("°C");
+			input.setSaveName("T");
 			break;
 		case kDiode:
 			sendStr = "CONF:DIOD\n";
+			input.setKind("Current");
+			input.setUnit("I");
+			input.setSaveName("I");
 			break;
 		case kContinuity:
 			sendStr = "CONF:CONT\n";
@@ -172,7 +202,7 @@ void K2000::setMode(const K2000::Mode mode) {
 		cerr << "Not possible to set correct mode!" << endl;
 		return;
 	}
-	query("INIT:CONT 1\n",100); //Enable continous measuring, no dedicated triggering
+	query("INIT:CONT 1\n",1000); //Enable continous measuring, no dedicated triggering
 	
 }
 

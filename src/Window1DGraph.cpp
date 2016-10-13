@@ -24,6 +24,11 @@ Window1DGraph::Window1DGraph(Scan1D* scan, unsigned int w, unsigned int h, unsig
 	
 }
 
+void Window1DGraph::applyLog() {
+	_canv->cd(1);
+	gPad->SetLogx();
+}
+
 void Window1DGraph::addPoint(MeasEvent* event) {	
 	_graphMean->SetPoint(_nPointsSet, event->param, event->channelEvent.at(_channelNum).value);
 	_graphMean->SetPointError(_nPointsSet, 1e-12, event->channelEvent.at(_channelNum).RMS);

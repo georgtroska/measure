@@ -36,6 +36,7 @@ protected:
 	bool _rep;
 
 public:
+	
 	//constructor
 	/**
 	* Constructor for the class 
@@ -52,6 +53,10 @@ public:
 	* @param sleepSet is the time the program waits after the parameter is changed
 	*/
 	virtual void Run(double start, double stop,  double step, double sleepSet);
+	
+	virtual void RunLog(double start, double stop, int nPoints, double sleepSet);
+	
+	virtual void RunLogDecades(double start, double stop, int stepsPerDecade, double sleepSet);
 
 	/**
 	* function to start a measurement
