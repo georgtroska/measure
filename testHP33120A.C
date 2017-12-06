@@ -1,20 +1,20 @@
 int testHP33120A() {
-	HP33120A hp("/dev/ttyUSB2",9600);
-	cout << hp.getIDN() << endl;
-	hp.setVoltageUnit(HP33120A::kVpp);
-	hp.setType(HP33120A::kSinusoid);
-	/*
-	hp.setFrequency(42000);
-	hp.setAmplitude(0.42);
-	hp.setOffset(-0.42);
-	*/
-	
-	hp.freq(380);
-	hp.ampl(0.1);
-	hp.offset(0);
-	
-	hp.freq(400);
-	hp.freq(500);
-	
+   HP33120A hp("/dev/ttyUSB0",9600);
+   cout << hp.getIDN() << endl;
+   hp.setVoltageUnit(HP33120A::kVpp);
+   hp.setType(HP33120A::kSinusoid);
+   /*
+   hp.setFrequency(42000);
+   hp.setAmplitude(0.42);
+   hp.setOffset(-0.42);
+   */
+   
+   hp.freq(380);
+   hp.ampl(0.1);
+   hp.offset(0);
+   
+   hp.freq(400);
+   hp.freq(500);
+   
 return 0;
 }

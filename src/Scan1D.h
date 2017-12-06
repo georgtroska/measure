@@ -54,9 +54,32 @@ public:
 	*/
 	virtual void Run(double start, double stop,  double step, double sleepSet);
 	
+	/**
+	* function to start a measurement with steps exponentially growing
+	* @param start is the value where to start the measurement
+	* @param stop is the value where to stop the measurement
+	* @param nPoints number of points between start and stop (including start and stop)
+	* @param sleepSet is the time the program waits after the parameter is changed
+	*/
+	
 	virtual void RunLog(double start, double stop, int nPoints, double sleepSet);
 	
-	virtual void RunLogDecades(double start, double stop, int stepsPerDecade, double sleepSet);
+	
+	/**
+	 * Run a measurement in Decades, e.g. if you want 3 steps per decade, it will
+	 * perform decade times 1, times 2.2, times 4.7. Start and stop value
+	 * will be added also although if there are not part of the row. If you use
+	 * shift=true, a decade is not between 1 and 10 but between 1 times start
+	 * value to 10 times start value. The decade factors are calculated by 
+	 * ((10)^(1/stepsPerDecade))^i, with i from 0 to stepsPerDecade-1 (see E-row)
+	 * @param start is the start value
+	 * @param stop is the stop value
+	 * @param stepsPerDecade will perfrom as many steps per decade
+	 * @param sleepSet is the time the program waits after the parameter is changed
+	 * @param shift stifts the decades according the start value
+	 */
+	
+	virtual void RunLogDecades(double start, double stop, int stepsPerDecade, double sleepSet, bool shift=false);
 
 	/**
 	* function to start a measurement

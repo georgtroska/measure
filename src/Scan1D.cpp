@@ -56,37 +56,50 @@ void Scan1D::Run(double start, double stop,  double step, double sleepSet){
 	Run(steps, sleepSet);
 }
 
-void Scan1D::RunLogDecades(double start, double stop, int stepsPerDecade, double sleepSet) {
+void Scan1D::RunLogDecades(double start, double stop, int stepsPerDecade, double sleepSet, bool shift) {
 	for (int i = 0; i < _graphs.size(); i++){
 		_graphs.at(i)->applyLog();
 	}
 	
 	int decade = std::floor(abs(log10(start))); //with start = 22, decade -> 1
-	double freq = start/TMath::Power(10,decade); //with start = 22, freq -> 2.2
+	int startDecade = decade;
+	double startFreq = start/TMath::Power(10,decade); //with start = 22, freq -> 2.2
 	double myFreq;
-	for (int myStep = 0; myStep < stepsPerDecade; myStep++) {
-		myFreq = TMath::Power(TMath::Power(10,1./stepsPerDecade),myStep);
-		if (myFreq > freq) break;
+	if (shift) {
+		myFreq = 1.;
+	} else {
+		for (int myStep = 0; myStep < stepsPerDecade; myStep++) {
+			myFreq = TMath::Power(TMath::Power(10,1./stepsPerDecade),myStep);
+			if (myFreq > startFreq) break;
+		}
 	}
 	
 	vector<double> steps;
-	//Pushing in the startFreq
-	steps.push_back(TMath::Power(10,decade)*freq);
+	if (!shift) {
+		//Pushing in the startFreq
+		steps.push_back(TMath::Power(10,decade)*startFreq);
+	}
 	bool isLooping = true;
 	while (isLooping) {
 		for (int myStep = 0; myStep < stepsPerDecade; myStep++) {
 			myFreq = TMath::Power(TMath::Power(10,1./stepsPerDecade),myStep);
+			if (shift) myFreq *= startFreq;
 
 			if (TMath::Power(10,decade)*myFreq > stop) {
 				isLooping = false;
 				break;
 			}
-			if (TMath::Power(10,decade)*myFreq >= freq*TMath::Power(10,decade)) steps.push_back(TMath::Power(10,decade)*myFreq);
+			if (TMath::Power(10,decade)*myFreq >= startFreq*TMath::Power(10,startDecade)) steps.push_back(TMath::Power(10,decade)*myFreq);
 		}
 		decade++; 
 	}
-	if (TMath::Power(10,decade)*myFreq > stop) {
+	if (TMath::Power(10,decade)*myFreq > stop && stop > steps.at(steps.size()-1)) {
 		steps.push_back(stop);
+	}
+	
+	cout << "Going to do following steps: " << endl;
+	for (int i = 0; i < steps.size(); i++) {
+		cout << "STEP " << dec << i+1<<"/"<<steps.size() << ": " << steps.at(i) << endl;
 	}
 	Run(steps, sleepSet);
 }
