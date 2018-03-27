@@ -21,7 +21,10 @@ libmeasure_la_SOURCES = \
 	MeasureChannel.cpp \
 	Scan1D.cpp \
 	Window1DGraph.cpp \
-	ScanSave.cpp
+	ScanSave.cpp \
+	TCPLink.cpp \
+	PosixSocket.cpp \
+	PosixFile.cpp
 	
 
 libmeasure_la_headers = \
@@ -40,7 +43,10 @@ libmeasure_la_headers = \
 	MeasureChannel.h \
 	Scan1D.h \
 	Window1DGraph.h \
-	ScanSave.h
+	ScanSave.h \
+	TCPLink.h \
+	PosixSocket.h \
+	PosixFile.h
 
 pkginclude_HEADERS = $(libmeasure_la_headers)
 
