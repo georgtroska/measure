@@ -1,0 +1,6 @@
+[ libDictOutput.dll ]
+# List of selected classes
+class A
+class Device
+header A.h
+header oneheader.h

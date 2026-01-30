@@ -1,0 +1,5 @@
+C:/Users/troska/Desktop/git/measure/test/build/CMakeFiles/DictOutput.dir
+C:/Users/troska/Desktop/git/measure/test/build/CMakeFiles/test.dir
+C:/Users/troska/Desktop/git/measure/test/build/CMakeFiles/testexe.dir
+C:/Users/troska/Desktop/git/measure/test/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/troska/Desktop/git/measure/test/build/CMakeFiles/ZERO_CHECK.dir

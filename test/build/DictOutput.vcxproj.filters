@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\troska\Desktop\git\measure\test\build\CMakeFiles\6d299377344b4b89790d460bd3baf6d3\DictOutput.cxx.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\troska\Desktop\git\measure\test\build\CMakeFiles\12f221bf6a169d4420a29c47d17082ba\DictOutput.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\troska\Desktop\git\measure\test\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\troska\Desktop\git\measure\test\build\CMakeFiles\DictOutput" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{3A71652A-ABFB-34F4-AFB3-F15108CE21FD}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+^C:\USERS\TROSKA\DESKTOP\GIT\MEASURE\TEST\BUILD\CMAKEFILES\6D299377344B4B89790D460BD3BAF6D3\DICTOUTPUT.CXX.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E env LD_LIBRARY_PATH=C:/root_v6.28.06/lib: C:/root_v6.28.06/bin/rootcling.exe -v2 -f DictOutput.cxx -s C:/Users/troska/Desktop/git/measure/test/build/libDictOutput.dll -rml libDictOutput.dll -rmf C:/Users/troska/Desktop/git/measure/test/build/libDictOutput.rootmap -writeEmptyRootPCM -IC:/root_v6.28.06/include -IC:/Users/troska/Desktop/git/measure/test C:/Users/troska/Desktop/git/measure/test/A.h C:/Users/troska/Desktop/git/measure/test/oneheader.h
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\TROSKA\DESKTOP\GIT\MEASURE\TEST\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/troska/Desktop/git/measure/test -BC:/Users/troska/Desktop/git/measure/test/build --check-stamp-file C:/Users/troska/Desktop/git/measure/test/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
