@@ -11,7 +11,7 @@
 #include <cstdio>
 
 
-class ScanSave {
+class __declspec(dllexport) ScanSave {
 	RQ_OBJECT("ScanSave")
 	
 	Scan1D & _scan;
@@ -40,7 +40,7 @@ public:
 	virtual ~ScanSave();
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class ScanSave-;
 #endif
 

@@ -19,27 +19,37 @@
 #define RS232Link_h	
 
 #include <iostream>
-#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+
 #include <string>
 #include <iostream>
 
-#include "DCELink.h"
+#if defined(__linux__) || defined(__FreeBSD__)
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#else
+#define WIN32_LEAN_AND_MEAN /* Use this before windows.h to avoid errors with incompatible typedefs*/
+#include <windows.h>
+#endif
+
+//#include "DCELink.h"
 
 namespace dce {
 
-class RS232Link : public MessageLink{
+class __declspec(dllexport) RS232Link { //: public MessageLink {
 public:
 	
 protected:
+#if defined(__linux__) || defined(__FreeBSD__)
 	int m_device;
 	struct termios m_old, m_options;
+#else
+	HANDLE m_device;
+#endif
 	
 	int m_timeout; //in milliseconds;
 	
@@ -62,19 +72,24 @@ public:
 	void setTerminationStringRecv(const std::string str) { _terminationStringRecv = str; }
 	void setDelayAfterSend(const int delay) { _delayAfterSend = delay; } //in microseconds
 
-	virtual void send(const void *buffer, size_t size, int timeout=-1) throw(std::runtime_error);
-	virtual size_t recv(void *buffer, size_t size, int timeout=-1) throw(std::runtime_error);
+	//Originally from DCELink
+	void checkIfOpen() const;
+	void sendMsg(const std::string msg, int timeout = -1);
+	std::string recvMsg(int timeout = -1);
+
+	virtual void send(const void *buffer, size_t size, int timeout=-1);
+	virtual size_t recv(void *buffer, size_t size, int timeout=-1);
 	///! timeout in units of 0.1s
-	virtual void open(const std::string &device, uint32_t baudrate, int timeout) throw(std::invalid_argument, std::runtime_error);
+	virtual void open(const std::string &device, uint32_t baudrate, int timeout);
 	
 	virtual void close();
 	
 	RS232Link();
-	RS232Link(const std::string &device, uint32_t baudrate, int timeout=1) throw(std::invalid_argument, std::runtime_error);
+	RS232Link(const std::string &device, uint32_t baudrate, int timeout=1);
 	virtual ~RS232Link();
-	virtual void sendLine(const std::string line, int timeout=-1) throw(std::runtime_error);
-	virtual std::string recvLine(int timeout=-1) throw(std::runtime_error);
-	virtual std::string query(const std::string question, int timeout = -1) throw(std::runtime_error);
+	virtual void sendLine(const std::string line, int timeout=-1);
+	virtual std::string recvLine(int timeout=-1);
+	virtual std::string query(const std::string question, int timeout = -1);
 	
 };
 
@@ -82,7 +97,7 @@ public:
 
 
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class dce::RS232Link-;
 #endif
 

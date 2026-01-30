@@ -11,7 +11,7 @@
 
 class Scan1D;
 
-class Window1DGraph {
+class __declspec(dllexport) Window1DGraph {
 	RQ_OBJECT("Window1DGraph")
 protected:
 	TCanvas* _canv;
@@ -64,7 +64,7 @@ public:
 };
 */
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Window1DGraph-;
 #endif
 

@@ -32,7 +32,13 @@ double MeasureChannel::getRMS(){
 		cout << "Measured value: " << newValue << endl;
 		_value.push_back(newValue);
 		_channel->getDevice().getSignal().measuredOnce(newValue);
-		if(_sleepTime != 0) sleep(_sleepTime);
+		if (_sleepTime != 0) {
+			#if defined(__linux__) || defined(__FreeBSD__)
+				sleep(_sleepTime);
+			#else
+				Sleep(_sleepTime);
+			#endif		
+		}
 	}
 	_channel->getDevice().getSignal().measuredMean(getMean(), getRMS());
 	return _value;

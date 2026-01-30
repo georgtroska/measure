@@ -4,53 +4,53 @@
 #include "Device.h"
 #include "Param.h"
 
-class HP33120A : public Device {
+class __declspec(dllexport) HP33120A : public Device {
 public:
 
-	class Frequency : public Param {
+	class __declspec(dllexport) Frequency  : public Param {
 		HP33120A & _dev;
-		Device & getDevice() { return _dev; }
+		Device & getDevice() override { return (Device&)_dev; }
 	public:
-		Frequency(HP33120A * d) : _dev(*d), Param() { 
+		Frequency(HP33120A * d) : _dev(*d), Param() {
 			_kind = "Frquency";
 			_unit = "Hz";
 			_saveName = "f";
 		}
 
-		virtual void operator()(double v) ;
-		virtual double operator()();
-		virtual void initialize() {};
+		virtual void operator()(double v) override;
+		virtual double operator()() override;
+		virtual void initialize() override {};
 	} freq;
 	
-	class Amplitude : public Param {
+	class __declspec(dllexport) Amplitude  : public Param {
 		HP33120A & _dev;
-		Device & getDevice() { return _dev; }
+		Device & getDevice() override { return (Device&)_dev; }
 	public:
-		Amplitude(HP33120A * d) : _dev(*d), Param() { 
-			_kind = "Voltage";
+		Amplitude(HP33120A * d) : _dev(*d), Param() {
+			/*_kind = "Voltage";
 			_unit = "V";
-			_saveName = "U";
+			_saveName = "U";*/
 		}
-		virtual void operator()(double v) ;
-		virtual double operator()();
-		virtual void initialize() {};
+		virtual void operator()(double v) override;
+		virtual double operator()() override;
+		virtual void initialize() override {};
 	} ampl;
 	
-	class Offset : public Param {
+	class __declspec(dllexport) Offset  : public Param {
 		HP33120A & _dev;
-		Device & getDevice() { return _dev; }
+		Device & getDevice() override { return (Device&)_dev; }
 	public:
-		Offset(HP33120A * d) : _dev(*d), Param() { 
-			_kind = "OffsetVoltage";
+		Offset(HP33120A * d) : _dev(*d), Param() {
+			/*_kind = "OffsetVoltage";
 			_unit = "V";
-			_saveName = "U_0";
+			_saveName = "U_0";*/
 		}
-		virtual void operator()(double v) ;
-		virtual double operator()();
-		virtual void initialize() {};
+		virtual void operator()(double v) override;
+		virtual double operator()() override;
+		virtual void initialize() override {};
 	} offset;
 	
-	enum Type {
+	enum __declspec(dllexport) Type {
 		kSinusoid,
 		kSquare,
 		kTriangle,
@@ -60,7 +60,7 @@ public:
 		kUser,
 		kUnknownType
 	} _type;
-	enum VoltageUnit {
+	enum __declspec(dllexport) VoltageUnit {
 		kVpp, //point to point
 		kVRMS, //rms
 		kVDBm, //DBm
@@ -68,11 +68,13 @@ public:
 	} _vunit;
 
 public:
-	HP33120A (std::string port, int baudrate, int timeout = -1) :
+	HP33120A(std::string port, int baudrate, int timeout = -1); 
+	HP33120A();
+	/* :
 		Device(port, baudrate, timeout, std::string("HP33120A")), freq(this), ampl(this), offset(this){
 			reset();
 			//_link.setTerminationString("\r");
-	}
+	}*/
 	
 	std::string query(const std::string query, const int timeout);
 	std::string getIDN();
@@ -95,8 +97,11 @@ public:
 
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class HP33120A-;
+#pragma link C++ class HP33120A::Amplitude-;
+#pragma link C++ class HP33120A::Frequency-;
+#pragma link C++ class HP33120A::Offset-;
 #endif
 
 #endif

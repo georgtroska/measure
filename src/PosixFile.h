@@ -32,9 +32,9 @@ protected:
 	int m_fd;
 	bool m_closeFD;
 	
-	void checkIfOpen() const throw(std::runtime_error);
+	void checkIfOpen() const;
 
-	void setFileFlag(int flag, bool value) throw(std::runtime_error, std::runtime_error);
+	void setFileFlag(int flag, bool value);
 	
 public:
 	enum AccessMode {
@@ -58,27 +58,27 @@ public:
 	// File has to be closed before re-opening.
 	// Use an already existing FD. set closeFD to false if that FD
 	// should not be closed on close() or ~PosixFile().
-	virtual void open(int fd, bool closeFD=true) throw(std::invalid_argument, std::runtime_error);
+	virtual void open(int fd, bool closeFD=true);
 	
-	virtual void close() throw(std::runtime_error);
+	virtual void close();
 
-	void blocking(bool block) throw(std::runtime_error, std::runtime_error);
+	void blocking(bool block);
 
-	bool pollRead(int timeout) throw(std::runtime_error, std::runtime_error);
+	bool pollRead(int timeout);
 
-	bool pollWrite(int timeout) throw(std::runtime_error, std::runtime_error);
+	bool pollWrite(int timeout);
 	
-	size_t read(void *buffer, size_t bufferSize) throw(std::runtime_error, std::runtime_error);
+	size_t read(void *buffer, size_t bufferSize);
 
-	size_t write(const void *buffer, size_t bufferSize) throw(std::runtime_error, std::runtime_error);
+	size_t write(const void *buffer, size_t bufferSize);
 	
-	void sync() throw(std::runtime_error, std::runtime_error);
+	void sync();
 	
 	PosixFile();
 
 	// PosixFile(const std::string &fileName, AccessMode accMode, CreateMode creaMode=CREA_NONE, bool nonblock=false, bool async=false) throw(std::invalid_argument, std::runtime_error);
 
-	PosixFile(int fd, bool closeFD=true) throw(std::invalid_argument, std::runtime_error);
+	PosixFile(int fd, bool closeFD=true);
 
 	virtual ~PosixFile();
 };
@@ -87,14 +87,14 @@ public:
 class FSPosixFile : public PosixFile {
 public:
 	// File has to be closed before re-opening.
-	virtual void open(const std::string &fileName, AccessMode accMode, CreateMode creaMode) throw(std::invalid_argument, std::runtime_error);
+	virtual void open(const std::string &fileName, AccessMode accMode, CreateMode creaMode);
 
 	// File has to be closed before re-opening.
-	virtual void open(const std::string &fileName, AccessMode accMode, CreateMode creaMode, bool nonblock, bool async=false) throw(std::invalid_argument, std::runtime_error);
+	virtual void open(const std::string &fileName, AccessMode accMode, CreateMode creaMode, bool nonblock, bool async=false);
 	
 	FSPosixFile();
 
-	FSPosixFile(const std::string &fileName, AccessMode accMode, CreateMode creaMode=CREA_NONE, bool nonblock=false, bool async=false) throw(std::invalid_argument, std::runtime_error);
+	FSPosixFile(const std::string &fileName, AccessMode accMode, CreateMode creaMode=CREA_NONE, bool nonblock=false, bool async=false);
 
 	virtual ~FSPosixFile();
 };

@@ -6,7 +6,7 @@
 #include <math.h>
 /** Abstract class that represents a manipulable parameter in a device. E.g. the voltage-parameter in a power supply
 */
-class Param : public Channel  {
+class __declspec(dllexport) Param : public Channel  {
 public:
 	//! Constructor empty
 	Param(): Channel() {
@@ -28,7 +28,7 @@ public:
 	virtual Device & getDevice() = 0;
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Param-;
 #endif
 

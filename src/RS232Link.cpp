@@ -21,10 +21,13 @@
 #include <cassert>
 #include <cstring>
 #include <sstream>
+#if defined(__linux__) || defined(__FreeBSD__)
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#else
 
+#endif
 using namespace std;
 
 std::string dce::RS232Link::getCanonicalURI() {
@@ -50,29 +53,68 @@ std::string dce::RS232Link::getDescription() {
 
 
 bool dce::RS232Link::isOpen() const {
+#if defined(__linux__) || defined(__FreeBSD__)
 	return m_device != -1;
+#else
+	return (m_device != NULL);
+#endif
 }
 
 
-void dce::RS232Link::send(const void *buffer, size_t size, int timeout) throw(std::runtime_error) {
+void dce::RS232Link::send(const void *buffer, size_t size, int timeout) {
 	//checkIfOpen();
 	try {
+#if defined(__linux__) || defined(__FreeBSD__)
 		size_t ret = ::write(m_device,buffer,size);
 		if (ret == size) return;
 		else if (ret > size) throw runtime_error("Unexpected strange IO Error.");
 		else if (ret > 0) throw runtime_error("Partial transmission while sending.");
 		else if (ret == 0) throw runtime_error("Empty transmission while sending.");
+#else
+		int n;
+		if (WriteFile(m_device, buffer, size, (LPDWORD)((void*)&n), NULL)){
+			std::cout << "Write file returns: " << n << std::endl;
+			return;
+		}
+		else {
+			throw runtime_error("Error while sending");
+		}
+
+#endif
 	} catch(...) {
 		throw runtime_error("IO Error while sending.");
 	}
 }
 
-size_t dce::RS232Link::recv(void *buffer, size_t size, int timeout) throw(std::runtime_error) {
+void dce::RS232Link::sendMsg(const std::string msg, int timeout) {
+	cout << "SENDING: " << msg << endl;
+	send(msg.c_str(), msg.length(), timeout);
+}
+
+void dce::RS232Link::checkIfOpen() const {
+	if (!isOpen()) throw runtime_error("Link is not open.");
+}
+
+std::string dce::RS232Link::recvMsg(int timeout) {
+	char buffer[1024];
+	int res = recv(buffer, 1023, timeout);
+	buffer[res] = 0;
+
+	return string(buffer);
+}
+
+size_t dce::RS232Link::recv(void *buffer, size_t size, int timeout)  {
 	checkIfOpen();
 	try {
+#if defined(__linux__) || defined(__FreeBSD__)
 		//sendMsg("?");
 		size_t ret = ::read(m_device,buffer,size);
 		return ret;
+#else
+		int n;
+		ReadFile(m_device, buffer, size, (LPDWORD)((void*)&n), NULL);
+		return n;
+#endif
 	} catch(...) {
 		throw runtime_error("IO Error while receiving.");
 	}
@@ -80,8 +122,9 @@ size_t dce::RS232Link::recv(void *buffer, size_t size, int timeout) throw(std::r
 
 
 
-void dce::RS232Link::open(const std::string &device, uint32_t baudrate, int timeout) throw(std::invalid_argument, std::runtime_error) {
+void dce::RS232Link::open(const std::string &device, uint32_t baudrate, int timeout) {
 	//checkIfNotOpen();
+#if defined(__linux__) || defined(__FreeBSD__)
 	try {
 		m_device = ::open(device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
 		
@@ -124,6 +167,62 @@ void dce::RS232Link::open(const std::string &device, uint32_t baudrate, int time
 		
 		
 		tcsetattr(m_device, TCSANOW, &m_options);
+		}
+#else
+	try {
+		m_device = CreateFileA(
+			device.c_str(),
+			GENERIC_READ | GENERIC_WRITE,
+			0, /* no share */
+			NULL, /* no security */
+			OPEN_EXISTING,
+			0, /* no thread */
+			NULL
+		); /* no templates */
+		if (m_device == INVALID_HANDLE_VALUE) {
+			throw runtime_error("Error while opening RS232 port");
+		}
+
+
+		DCB portSettings;
+		memset(&portSettings, 0, sizeof(portSettings)); /* clear the new struct  */
+		portSettings.DCBlength = sizeof(portSettings);
+
+		char modeStr[128];
+		sprintf(modeStr, "baud=%d parity=N data=8 stop=1", baudrate);
+		if (!BuildCommDCBA(modeStr, &portSettings)) {
+			throw runtime_error("Unable to set comport dcb settings.");
+			CloseHandle(m_device);
+			//return -8;
+		}
+		/*
+		if (enableFlowCtrl) {
+			portSettings.fOutxCtsFlow = TRUE;
+			portSettings.fRtsControl = RTS_CONTROL_HANDSHAKE;
+		}*/
+
+		if (!SetCommState(m_device, &portSettings)) {
+			
+			throw runtime_error("Unable to set comport cfg settings.");
+			CloseHandle(m_device);
+			//return -9;
+		}
+
+		COMMTIMEOUTS Cptimeouts;
+		Cptimeouts.ReadIntervalTimeout = MAXDWORD;
+		Cptimeouts.ReadTotalTimeoutMultiplier = 0;
+		Cptimeouts.ReadTotalTimeoutConstant = 0;
+		Cptimeouts.WriteTotalTimeoutMultiplier = 0;
+		Cptimeouts.WriteTotalTimeoutConstant = 0;
+
+		if (!SetCommTimeouts(m_device, &Cptimeouts)) {
+			throw runtime_error("Unable to set comport time-out settings.");
+			CloseHandle(m_device);
+			//return -10;
+		}
+	}
+#endif
+
 		/*
 		int serial;
 		ioctl(m_device, TIOCMGET, &serial);
@@ -132,7 +231,7 @@ void dce::RS232Link::open(const std::string &device, uint32_t baudrate, int time
            else
                std::cout << "TIOCM_DTR is not set" << std::endl;
                */
-	} catch(...) {
+	catch(...) {
 		throw runtime_error("Error while opening RS232 port");	
 	}
 }
@@ -140,32 +239,48 @@ void dce::RS232Link::open(const std::string &device, uint32_t baudrate, int time
 
 void dce::RS232Link::close() {
 	//checkIfOpen();
-	
+#if defined(__linux__) || defined(__FreeBSD__)
 	/* restore the old port settings */
 	tcsetattr(m_device,TCSANOW,&m_old);
 	::close(m_device);
+#else
+	CloseHandle(m_device);
+#endif
 }
 
 
-dce::RS232Link::RS232Link()
-	: m_device(-1)
-{}
-dce::RS232Link::RS232Link(const std::string &device, uint32_t baudrate, int timeout) throw(std::invalid_argument, std::runtime_error) 
-	: m_device(-1), _terminationStringSend("\n"), _terminationStringRecv("\n"), _delayAfterSend(-1) {
+dce::RS232Link::RS232Link() {
+#if defined(__linux__) || defined(__FreeBSD__)
+	m_device(-1);
+#else
+	m_device = INVALID_HANDLE_VALUE;
+	
+#endif
+}
+
+dce::RS232Link::RS232Link(const std::string &device, uint32_t baudrate, int timeout) 
+	: _terminationStringSend("\n"), _terminationStringRecv("\n"), _delayAfterSend(-1)
+#if defined(__linux__) || defined(__FreeBSD__)
+	, m_device(-1) 
+#else
+
+#endif
+{
 	open(device,baudrate,timeout);
 	
 }
 
 
 dce::RS232Link::~RS232Link() {
-	try { if (isOpen()) close(); }
-	catch (...) { assert( false ); }
+	//try { if (isOpen()) close(); }
+	//catch (...) { assert( false ); }
 }
 
-void dce::RS232Link::sendLine(const std::string line, int timeout) throw(std::runtime_error) {
+void dce::RS232Link::sendLine(const std::string line, int timeout) {
 	char out[1024];
 	sprintf(out,"%s%s",line.c_str(),_terminationStringSend.c_str());
 	sendMsg(out, timeout);
+#if defined(__linux__) || defined(__FreeBSD__)
 	int bytes;
 	int myDelay = _delayAfterSend;
 	while (1) {
@@ -176,9 +291,12 @@ void dce::RS232Link::sendLine(const std::string line, int timeout) throw(std::ru
 			if (myDelay < 0) break;
 		}
 	}
+#else
+	Sleep(1); //1ms
+#endif
 }
 
-std::string dce::RS232Link::recvLine(int timeout) throw(std::runtime_error) {
+std::string dce::RS232Link::recvLine(int timeout)  {
 	std::string in;
 	int iFlags;
 /*
@@ -216,7 +334,11 @@ std::string dce::RS232Link::recvLine(int timeout) throw(std::runtime_error) {
 				break;
 			}
 		}
+#if defined(__linux__) || defined(__FreeBSD__)
 		usleep(50000); //wait intervalls of 50ms
+#else
+		Sleep(50); //wait 50ms;
+#endif
 		timeout -= 50;
 	} 
 	/*
@@ -236,7 +358,7 @@ std::string dce::RS232Link::recvLine(int timeout) throw(std::runtime_error) {
 	}
 	return in;
 }
-std::string dce::RS232Link::query(const std::string question, int timeout) throw(std::runtime_error) {
+std::string dce::RS232Link::query(const std::string question, int timeout) {
 	sendLine(question);
 	return recvLine(timeout);	
 }

@@ -6,7 +6,7 @@
 #include<iostream>
 #include<string.h>
 
-class ExcLimit : public std::exception{
+class __declspec(dllexport) ExcLimit : public std::exception{
 	std::string _devName;
 	std::string _limitKind;
 	std::string _channelName;
@@ -28,7 +28,7 @@ public:
 	~ExcLimit() throw() {}
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class ExcLimit-;
 #endif
 

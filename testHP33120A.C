@@ -1,8 +1,10 @@
+R__LOAD_LIBRARY(build/Release/measure)
+#include "src/HP33120A.h"
 int testHP33120A() {
-   HP33120A hp("/dev/ttyUSB0",9600);
+   HP33120A hp("COM6",9600);
    cout << hp.getIDN() << endl;
-   hp.setVoltageUnit(HP33120A::kVpp);
-   hp.setType(HP33120A::kSinusoid);
+   //hp.setVoltageUnit(HP33120A::kVpp);
+   //hp.setType(HP33120A::kSinusoid);
    /*
    hp.setFrequency(42000);
    hp.setAmplitude(0.42);

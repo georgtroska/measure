@@ -15,7 +15,7 @@
  @endcode
 */
 
-class K2000: public Device {
+class __declspec(dllexport) K2000: public Device {
 public:
 	enum Mode {
 		kCurrentDC,
@@ -54,12 +54,7 @@ public:
 	}
 #endif
 
-	K2000(std::string port, int baudrate, int timeout = -1) :
-		Device(port, baudrate, timeout, std::string("K2000")), input(this){
-			reset();
-			//_link.setTerminationString("\r");
-	}
-	//Constructors end
+	
 
 	/** Resets device to factory defaults and enables the device (Turns operate on and Zero-Check off)
 	* @param on set to false to disable
@@ -96,36 +91,71 @@ public:
 	
 	//double getVoltageAC();
 	
-	double readInput();	
+	double readVoltageAC();
+	double readCurrentAC();
 	void setMode( const Mode mode);
 	Mode checkMode ();
 	
-	class Input : public Channel {
+	class Voltage : public Channel {
+	protected:
 		//! The interface to the K2000
-		K2000 &_dev;
+		K2000& _dev;
 		//! Getter for the K2000. 
-		Device & getDevice() { return _dev;}
+		Device& getDevice() override { return (Device&)_dev; }
 	public:
 		//Construtor
 		/** Constructor of Current subclass of K487. One can read the current through this.
 		*/
-		Input(K2000 * d) : _dev(*d), Channel() {
-			/*
+		Voltage(K2000* d) : _dev(*d), Channel() {
+			_kind = "Voltage";
+			_unit = "V";
+			_saveName = "U";
+		}
+		//Constructor end 
+		//! The reader for the input
+		virtual double operator()() override {
+			return _dev.readInput();
+		}
+	} voltage;
+
+	class Current : public Channel {
+	protected:
+		//! The interface to the K2000
+		K2000& _dev;
+		//! Getter for the K2000. 
+		Device& getDevice() override { return (Device&)_dev; }
+	public:
+		//Construtor
+		/** Constructor of Current subclass of K487. One can read the current through this.
+		*/
+		Voltage(K2000* d) : _dev(*d), Channel() {
 			_kind = "Current";
 			_unit = "A";
 			_saveName = "I";
-			*/
-			}
+		}
 		//Constructor end 
 		//! The reader for the input
-		virtual double operator()();
-	} input;
+		virtual double operator()() override {
+			return _dev.readInput();
+		}
+	} current;
+
+	K2000(std::string port, int baudrate, int timeout = -1) :
+		Device(port, baudrate, timeout, std::string("K2000")), voltage(this), current(this) {
+		reset();
+		//_link.setTerminationString("\r");
+	}
+	//Constructors end
 	
 	
 };
 
-#ifdef __CINT__
+
+
+#ifdef __CLING__
 #pragma link C++ class K2000-;
+#pragma link C++ class K2000::Voltage-;
+#pragma link C++ class K2000::Current-;
 #endif
 
 #endif

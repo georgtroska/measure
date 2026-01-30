@@ -6,7 +6,7 @@
 /** Abstract class to represent any kind of limit.
 * The basic idea is that an exception is thrown when a limit is reached
 */
-class Limit {
+class __declspec(dllexport) Limit {
 protected:
 	//! The value for an upper limit
 	double _posLimit;
@@ -53,7 +53,7 @@ public:
 	
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Limit-;
 #endif
 

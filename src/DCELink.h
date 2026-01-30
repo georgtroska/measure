@@ -29,11 +29,11 @@ namespace dce {
 
 /// Basic DAqCorE communicaton-link class
 
-class DCELink : public DCEResource {
+class __declspec(dllexport) DCELink : public DCEResource {
 protected:
-	void checkIfOpen() const throw(std::runtime_error);
+	void checkIfOpen() const;
 
-	void checkIfNotOpen() const throw(std::runtime_error);
+	void checkIfNotOpen() const;
 
 public:
 	virtual std::string getCanonicalURI() = 0;
@@ -48,27 +48,27 @@ public:
 
 /// Message send/receive link
 
-class MessageLink : public DCELink {
+class __declspec(dllexport) MessageLink : public DCELink {
 protected:
 public:
-	virtual void send(const void *buffer, size_t bufsize, int timeout=-1) throw(std::runtime_error) = 0;
-	virtual size_t recv(void *buffer, size_t bufsize, int timeout=-1) throw(std::runtime_error) = 0;
+	virtual void send(const void *buffer, size_t bufsize, int timeout=-1) = 0;
+	virtual size_t recv(void *buffer, size_t bufsize, int timeout=-1)  = 0;
 
-	virtual void sendMsg(const std::string msg, int timeout=-1) throw(std::runtime_error);
-	virtual std::string recvMsg(int timeout=-1) throw(std::runtime_error);
+	virtual void sendMsg(const std::string msg, int timeout=-1);
+	virtual std::string recvMsg(int timeout=-1);
 };
 
 
 /// Message send/receive link
 
-class StreamLink : public DCELink {
+class __declspec(dllexport) StreamLink : public DCELink {
 protected:
 public:
-	virtual void send(const void *buffer, size_t bufsize, int timeout=-1) throw(std::runtime_error) = 0;
-	virtual size_t recv(void *buffer, size_t bufsize, int timeout=-1) throw(std::runtime_error) = 0;
+	virtual void send(const void *buffer, size_t bufsize, int timeout=-1) = 0;
+	virtual size_t recv(void *buffer, size_t bufsize, int timeout=-1) = 0;
 
-	virtual void sendStr(const std::string msg, int timeout=-1) throw(std::runtime_error);
-	virtual std::string recvStr(int timeout=-1) throw(std::runtime_error);
+	virtual void sendStr(const std::string msg, int timeout=-1);
+	virtual std::string recvStr(int timeout=-1);
 };
 
 
@@ -76,7 +76,7 @@ public:
 ///
 /// Examples: RS485
 
-class StreamARLink : public StreamLink {
+class __declspec(dllexport) StreamARLink : public StreamLink {
 protected:
 public:
 };
@@ -86,7 +86,7 @@ public:
 ///
 /// Examples: TCP/IP, UDP/IP, RS232, RS422
 
-class StreamPRLink : public StreamLink {
+class __declspec(dllexport) StreamPRLink : public StreamLink {
 protected:
 public:
 };
@@ -96,7 +96,7 @@ public:
 ///
 /// Examples: I2C
 
-class MsgTALink : public MessageLink {
+class __declspec(dllexport) MsgTALink : public MessageLink {
 protected:
 public:
 	virtual size_t transact(const void *txBuf, size_t txSize, void *rxBuf, size_t rxSize, int timeout) = 0;
@@ -107,7 +107,7 @@ public:
 ///
 /// Examples: SPI
 
-class DataExchLink : public DCELink {
+class __declspec(dllexport) DataExchLink : public DCELink {
 protected:
 public:
 	virtual size_t dxch(const void *txBuf, size_t txSize, void *rxBuf, size_t rxSize, int timeout) = 0;
@@ -116,18 +116,18 @@ public:
 
 /// Memory/Register-Style link
 
-class MemoryLink : public DCELink {
+class __declspec(dllexport) MemoryLink : public DCELink {
 protected:
 public:
-	virtual void write(size_t address, const void *buffer, size_t bufsize) throw(std::runtime_error) = 0;
-	virtual size_t read(size_t address, void *buffer, size_t bufsize) throw(std::runtime_error) = 0;
+	virtual void write(size_t address, const void *buffer, size_t bufsize) = 0;
+	virtual size_t read(size_t address, void *buffer, size_t bufsize) = 0;
 };
 
 
 } // namespace dce
 
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class dce::Timeout-;
 #pragma link C++ class dce::DCEResource-;
 #pragma link C++ class dce::SmartPtr<dce::DCEResource>-;

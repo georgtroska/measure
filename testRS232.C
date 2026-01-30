@@ -1,17 +1,24 @@
-#include <unistd.h>
+//#include <unistd.h>
+//R__ADD_LIBRARY_PATH("build/Release/")
+R__LOAD_LIBRARY(build/Release/measure)
+#include "src/RS232Link.h"
 int testRS232() {
 	
-	dce::RS232Link *l = new dce::RS232Link("/dev/ttyUSB1",9600);
+	
+	dce::RS232Link *l = new dce::RS232Link("COM6",9600);
 	l->setTerminationStringSend("\n");
 		l->setTerminationStringRecv("\r");
 	
 	cout << l->query("SYSTEM:REMOTE",100) << endl;
 	cout << l->query("*RST",100) << endl;
 	cout << l->query("*CLS",100) << endl;
-	usleep(100000);
-	std::string answer = l->query("*IDN?",3000);
-	cout << answer << endl;
-	cout << answer.find(0x0d) << " " << answer.find(0x0a) << endl;
+	cout << l->query("FUNC:SHAP?", 5000) << endl;
+	//cout << l->query("DISP:DATA MARA?") << endl;
+	//cout << l->query("DISP:STAT 1") << endl;
+	//usleep(100000);
+	//std::string answer = l->query("*IDN?",3000);
+	//cout << answer << endl;
+	//cout << answer.find(0x0d) << " " << answer.find(0x0a) << endl;
 
 /*	
 	for (int i = 10; i< 20; i++) {

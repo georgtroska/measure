@@ -5,7 +5,7 @@
 #include <vector>
 
 
-class MeasureChannel {
+class __declspec(dllexport) MeasureChannel {
 	Channel* _channel;
 	int _nValues;
 	std::vector<double> _value;
@@ -24,7 +24,7 @@ public:
 	
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class MeasureChannel-;
 #endif
 

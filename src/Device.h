@@ -28,7 +28,7 @@ enum ConnectionType
 enum TriggerType {EXTERN,BUS,STANDARD};
 enum ReadoutType {SINGLE,ALL};
 
-class Device {
+class __declspec(dllexport) Device {
 protected:
 	//! A simple name
 	std::string _name;
@@ -37,7 +37,7 @@ protected:
 	std::string _type;
 	
 	//! The VXI11-Link
-	class comLink {
+	class __declspec(dllexport) comLink {
 #ifdef USEDAQCORE	
 
 		dce::VXI11Link* vxi11;
@@ -277,8 +277,9 @@ public:
 };
 
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Device-;
+#pragma link C++ class Device::comLink-;
 #endif
 
 #endif

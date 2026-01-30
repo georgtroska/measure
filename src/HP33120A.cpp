@@ -3,6 +3,16 @@
 
 using namespace std;
 
+HP33120A::HP33120A(std::string port, int baudrate, int timeout) :
+	Device(port, baudrate, timeout, std::string("HP33120A")), freq(this), ampl(this), offset(this) {
+	reset();
+	//_link.setTerminationString("\r");
+}
+HP33120A::HP33120A() :
+	Device(), freq(this), ampl(this), offset(this) {
+
+}
+
 std::string HP33120A::query(const std::string query, const int timeout) {
 	_link.sendMsg(query);
 	return _link.recvMsg(timeout);
@@ -46,10 +56,12 @@ void HP33120A::setType(HP33120A::Type type) {
 	}
 	query(sendStr,1000);
 	_type = checkType();
+	/*
 	if (_type != type) {
 		cerr << "Not possible to set correct type!" << endl;
 		return;
 	}
+	*/
 	
 }
 
@@ -93,11 +105,13 @@ void HP33120A::setVoltageUnit(HP33120A::VoltageUnit unit) {
 		
 	}
 	query(sendStr,1000);
+	/*
 	_vunit = checkVoltageUnit();
 	if (_vunit != unit) {
 		cerr << "Not possible to set correct type!" << endl;
 		return;
 	}
+	*/
 }
 
 HP33120A::VoltageUnit HP33120A::checkVoltageUnit() {

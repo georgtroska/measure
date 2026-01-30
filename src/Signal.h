@@ -4,7 +4,7 @@
 #include <RQ_OBJECT.h>
 
 
-class Signal {
+class __declspec(dllexport) Signal {
 	RQ_OBJECT("Signal")
 	
 public:
@@ -13,7 +13,7 @@ public:
 	void measuredMean(double mean, double rms);	//*SIGNAL*
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Signal-;
 #endif
 
