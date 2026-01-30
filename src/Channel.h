@@ -6,7 +6,7 @@
 #include <string>
 /** Abstract class that represents a measurement channel in a device. E.g. the current-channel in an amperemeter
 */
-class Channel : public Limit {
+class __declspec(dllexport) Channel : public Limit {
 protected:
 	//! Simple kind of this channel
 	std::string _kind;
@@ -45,7 +45,7 @@ public:
 	std::string getUnit() { return _unit; }
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Channel-;
 #endif
 

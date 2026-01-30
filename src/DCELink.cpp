@@ -25,24 +25,24 @@ using namespace std;
 namespace dce {
 
 
-void DCELink::checkIfOpen() const throw(std::runtime_error) {
+void DCELink::checkIfOpen() const {
 	if (!isOpen()) throw runtime_error("Link is not open.");
 }
 
 
-void DCELink::checkIfNotOpen() const throw(std::runtime_error) {
+void DCELink::checkIfNotOpen() const {
 	if (isOpen()) throw runtime_error("Link is already open.");
 }
 
 
 	
-void MessageLink::sendMsg(const std::string msg, int timeout) throw(std::runtime_error) {
+void MessageLink::sendMsg(const std::string msg, int timeout)  {
 	cout << "SENDING: " << msg << endl;
 	send(msg.c_str(), msg.length(), timeout);
 }
 
 
-std::string MessageLink::recvMsg(int timeout) throw(std::runtime_error) {
+std::string MessageLink::recvMsg(int timeout)  {
 	char buffer[1024];
 	int res = recv(buffer, 1023, timeout);
 	buffer[res] = 0;
@@ -51,12 +51,12 @@ std::string MessageLink::recvMsg(int timeout) throw(std::runtime_error) {
 }
 
 
-void StreamLink::sendStr(const std::string msg, int timeout) throw(std::runtime_error) {
+void StreamLink::sendStr(const std::string msg, int timeout) {
 	send(msg.c_str(), msg.length(), timeout);
 }
 
 
-std::string StreamLink::recvStr(int timeout) throw(std::runtime_error) {
+std::string StreamLink::recvStr(int timeout)  {
 	char buffer[1024];
 	int res = recv(buffer, 1023, timeout);
 	buffer[res] = 0;

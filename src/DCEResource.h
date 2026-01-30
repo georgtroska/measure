@@ -26,7 +26,7 @@
 namespace dce {
 
 
-class Timeout : public std::runtime_error {
+class __declspec(dllexport) Timeout : public std::runtime_error {
 public:
 	Timeout();
 };
@@ -34,7 +34,7 @@ public:
 	
 /// Basic DAqCorE resource class
 
-class DCEResource {
+class __declspec(dllexport) DCEResource {
 public:
 	virtual std::string getURI() = 0; //!! Make const! Return reference?
 	virtual std::string getIdentity() = 0; //!! Make const! Return reference?
@@ -47,7 +47,7 @@ public:
 } // namespace dce
 
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class dce::Timeout-;
 #pragma link C++ class dce::DCEResource-;
 #pragma link C++ class dce::SmartPtr<dce::DCEResource>-;

@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdint.h>
 
-class ChannelMeasEvent {
+class __declspec(dllexport) ChannelMeasEvent {
 public:
 	double value;
 	double RMS;
@@ -17,7 +17,7 @@ public:
 	}*/
 };
 
-class MeasEvent {
+class __declspec(dllexport) MeasEvent {
 public:
 	bool isBORE;
 	double param;
@@ -46,7 +46,7 @@ public:
 	
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class MeasEvent-;
 #pragma link C++ class ChannelMeasEvent-;
 #endif

@@ -67,7 +67,7 @@ public:
 	PosixSocketType type() const { return m_type; }
 	
 	PosixSocketAddr();
-	PosixSocketAddr(const std::string &hostName, unsigned int port, PosixSocketType sockType) throw(std::invalid_argument, std::runtime_error);
+	PosixSocketAddr(const std::string &hostName, unsigned int port, PosixSocketType sockType);
 
 	virtual ~PosixSocketAddr();
 };
@@ -80,13 +80,13 @@ protected:
 public:
 	PosixSocketType type() const { return m_type; }
 	
-	void connectTo(const PosixSocketAddr &address) throw(std::runtime_error, std::runtime_error);
+	void connectTo(const PosixSocketAddr &address);
 
-	size_t send(const void *data, size_t dataSize, int flags = 0) throw(std::runtime_error, std::runtime_error);
+	size_t send(const void *data, size_t dataSize, int flags = 0);
 
-	size_t sendTo(const PosixSocketAddr &address, const void *data, size_t dataSize, int flags = 0) throw(std::runtime_error, std::runtime_error);
+	size_t sendTo(const PosixSocketAddr &address, const void *data, size_t dataSize, int flags = 0);
 
-	size_t recv(void *data, size_t dataSize, int flags = 0) throw(std::runtime_error, std::runtime_error);
+	size_t recv(void *data, size_t dataSize, int flags = 0);
 
 	//ssize_t recvFrom(const PosixSocketAddr &address, void *data, size_t dataSize, int flags = 0) throw(std::runtime_error, std::runtime_error);
 		// Not implemented yet.
@@ -94,22 +94,22 @@ public:
 	//void bind(const PosixSocketAddr &address);
 		// Not implemented yet.
 
-	void listenTCP(uint16_t port, unsigned int backlog=10) throw(std::invalid_argument, std::runtime_error);
+	void listenTCP(uint16_t port, unsigned int backlog=10);
 
-	PosixSocket* accept() throw(std::invalid_argument, std::runtime_error);
+	PosixSocket* accept();
 
 	//PosixSocket accept(PosixSocketAddr &address); //!! Return type problems
 		// Not implemented yet.
 		
-	virtual void open(int fd, bool closeFD=true) throw(std::invalid_argument, std::runtime_error);
+	virtual void open(int fd, bool closeFD=true);
 
 	PosixSocket();
 
-	PosixSocket(int fd, bool closeFD=true) throw(std::invalid_argument, std::runtime_error);
+	PosixSocket(int fd, bool closeFD=true);
 	
-	PosixSocket(int family, int type, int protocol = 0) throw(std::invalid_argument, std::runtime_error);
+	PosixSocket(int family, int type, int protocol = 0);
 
-	PosixSocket(const PosixSocketAddr &address) throw(std::invalid_argument, std::runtime_error);
+	PosixSocket(const PosixSocketAddr &address);
 
 	virtual ~PosixSocket();
 };
@@ -118,9 +118,9 @@ public:
 } // namespace dce
 
 
-#ifdef __CINT__
-#pragma link C++ class dce::PosixSocketAddr-;
-#pragma link C++ class dce::PosixSocket-;
+#ifdef __CLING__
+//#pragma link C++ class dce::PosixSocketAddr-;
+//#pragma link C++ class dce::PosixSocket-;
 #endif
 
 

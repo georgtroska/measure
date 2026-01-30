@@ -1,7 +1,7 @@
 #ifndef measure_LinkDef_h
 #define measure_LinkDef_h
 
-#ifdef __CINT__
+#ifdef __CLING__
 
 // HelloWorld.h
 #pragma link C++ class meas::HelloWorld-;

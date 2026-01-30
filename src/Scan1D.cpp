@@ -107,6 +107,7 @@ void Scan1D::RunLogDecades(double start, double stop, int stepsPerDecade, double
 void Scan1D::Run(vector<double>& steps, double sleepSet) {
 	try{
 		MeasEvent * bore = createBORE();
+		std::cout << "triggering BORE" << std::endl;
 		onStartRun(bore);
 		delete bore;
 		std::cout << "Scan1D: Starting new measurement..." << std::endl;
@@ -114,7 +115,11 @@ void Scan1D::Run(vector<double>& steps, double sleepSet) {
 		bool isFirst = true;
 		for (stepit = steps.begin(); stepit < steps.end(); stepit++){
 			(*_param)(*stepit);
-			if (isFirst) sleep(1); else sleep(sleepSet);		
+#if defined(__linux__) || defined(__FreeBSD__)
+			if (isFirst) sleep(1); else sleep(sleepSet);
+#else
+			if (isFirst) Sleep(1); else Sleep(sleepSet);
+#endif
 			MeasEvent * event = new MeasEvent();
 			event->param = *stepit;
 			map<string,MeasureChannel>::iterator it;

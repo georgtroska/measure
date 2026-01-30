@@ -48,17 +48,17 @@ public:
 	
 	bool isOpen() const;
 
-	virtual void send(const void *buffer, size_t size, int timeout=-1) throw(std::runtime_error);
-	virtual size_t recv(void *buffer, size_t size, int timeout=-1) throw(std::runtime_error);
+	virtual void send(const void *buffer, size_t size, int timeout=-1);
+	virtual size_t recv(void *buffer, size_t size, int timeout=-1);
 
-	virtual void open(const std::string &uri) throw(std::invalid_argument, std::runtime_error);
-	virtual void open(const std::string &hostname, uint16_t port) throw(std::invalid_argument, std::runtime_error);
-	virtual void open(void *socket) throw(std::invalid_argument, std::runtime_error);
+	virtual void open(const std::string &uri);
+	virtual void open(const std::string &hostname, uint16_t port);
+	virtual void open(void *socket);
 	virtual void close();
 	
 	TCPLink();
 	//TCPLink(const std::string &uri) throw(std::runtime_error) throw(std::invalid_argument, std::runtime_error);
-	TCPLink(const std::string &hostname, uint16_t port) throw(std::invalid_argument, std::runtime_error);
+	TCPLink(const std::string &hostname, uint16_t port);
 	virtual ~TCPLink();
 };
 
@@ -68,16 +68,16 @@ class TCPServer {
 	void *m_socket;
 
 public:
-	TCPLink* accept() throw(std::runtime_error);
+	TCPLink* accept();
 
 	bool isOpen() const;
 	
-	void open(uint16_t port, unsigned int backlog=10) throw(std::invalid_argument, std::runtime_error);
+	void open(uint16_t port, unsigned int backlog=10);
 	
 	void close();
 
 	TCPServer();
-	TCPServer(uint16_t port, unsigned int backlog=10) throw(std::invalid_argument, std::runtime_error);
+	TCPServer(uint16_t port, unsigned int backlog=10);
 
 	virtual ~TCPServer();
 };
@@ -86,9 +86,9 @@ public:
 } // namespace dce
 
 
-#ifdef __CINT__
-#pragma link C++ class dce::TCPServer-;
-#pragma link C++ class dce::TCPLink-;
+#ifdef __CLING__
+//#pragma link C++ class dce::TCPServer-;
+//#pragma link C++ class dce::TCPLink-;
 #endif
 
 

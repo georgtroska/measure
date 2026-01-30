@@ -3,6 +3,7 @@
 #include <TMap.h>
 #include <TList.h>
 
+
 using namespace std;
 
 ScanSave::ScanSave(Scan1D *scan) : _scan(*scan){
@@ -138,7 +139,7 @@ void ScanSave::setConditions(ScanConditions* cond) {
 */
 
 void ScanSave::setBranches(MeasEvent * bore) {			//*RECEIVER*
-	//std::cout << "Being in setBranches..." << std::endl; 		
+	std::cout << "Being in setBranches..." << std::endl; 		
 	_activeMeasEvent = *bore;
 	const int nchannel = _scan.getNChannels();
 	std::cout << "nchannel: " << nchannel << std::endl;

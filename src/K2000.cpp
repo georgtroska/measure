@@ -1,5 +1,10 @@
 #include "K2000.h"
 
+#if defined(__linux__) || defined(__FreeBSD__)
+#else
+#include <windows.h>
+#endif
+
 using namespace std;
 
 
@@ -109,7 +114,11 @@ double K2000::getHumidity(int channel){
 */	
 std::string K2000::getIDN() {
 	_link.sendMsg("*IDN?\n");
-	usleep(100000);
+	#if defined(__linux__) || defined(__FreeBSD__)
+		usleep(100000);
+	#else
+		Sleep(100);
+	#endif
 	return _link.recvMsg(1000);
 }
 /*
@@ -131,6 +140,7 @@ void K2000::setMode(const K2000::Mode mode) {
 		cerr << "Impossible to set mode to kUnknown" << endl;
 		return;
 	}
+
 	switch (mode) {
 		case kCurrentAC:
 			sendStr = "CONF:CURR:AC\n";
@@ -194,8 +204,11 @@ void K2000::setMode(const K2000::Mode mode) {
 			break;
 		case kContinuity:
 			sendStr = "CONF:CONT\n";
-			break;
+		
+		break;
 	}
+
+	
 	query(sendStr,1000);
 	_mode = checkMode();
 	if (_mode != mode) {
@@ -235,16 +248,14 @@ K2000::Mode K2000::checkMode() {
 	}
 }
 
-double_t K2000::readInput() {
-	if (_mode == kUnknown) {
-		cerr << "Unknown Mode! Select a mode before initiating a readInput()" << endl;
-		return 0;
-	}
+double_t K2000::readVoltageAC() {
+	setMode(K2000::kVoltageAC);
 	return atof(query("FETC?\n",1000).c_str());
 }
-
-// class Input
-double K2000::Input::operator()() {
-	return _dev.readInput();
+double_t K2000::readCurrentAC() {
+	setMode(K2000::kCurrentAC);
+	return atof(query("FETC?\n", 1000).c_str());
 }
+
+
 

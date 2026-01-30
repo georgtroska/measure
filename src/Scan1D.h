@@ -23,7 +23,7 @@ class Window1DGraph;
 * scan->Run(0,-300,5,2);
 * @endcode
 */
-class Scan1D {
+class __declspec(dllexport) Scan1D {
 protected:
 	RQ_OBJECT("Scan1D")
 	Param * _param;
@@ -145,7 +145,7 @@ public:
 	virtual ~Scan1D();
 };
 
-#ifdef __CINT__
+#ifdef __CLING__
 #pragma link C++ class Scan1D-;
 #endif
 
